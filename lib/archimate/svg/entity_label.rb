@@ -96,14 +96,13 @@ module Archimate
         text_lines.each_with_object([]) do |line, lines|
           text = Text.new(line, child.style)
           lines.concat(
-            text.layout_with_max(max_widths)
+            text.layout_with_max(max_widths(text.line_height))
                 .map { |str, len| [str, len, text.line_height, "entity-name"] }
           )
         end
       end
 
-      def max_widths
-        line_height = Text.new("", child.style).line_height
+      def max_widths(line_height)
         rows = text_bounds.height / line_height
         (0..rows).map do |i|
           if i * line_height < badge_bounds.height

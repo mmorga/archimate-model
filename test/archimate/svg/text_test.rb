@@ -26,6 +26,7 @@ module Archimate
       #
       # The default is Lucida Grande @ 11px
       def test_default_render
+        skip "Move to FontTest"
         bounds = subject.layout
         assert_equal 0, bounds.x
         assert_equal 0, bounds.y
@@ -34,10 +35,12 @@ module Archimate
       end
 
       def test_default_font_size
+        skip "Move to FontTest"
         assert_equal 11.0, subject.font_size_px
       end
 
       def test_default_line_height
+        skip "Move this to FontTest"
         assert_equal 11 * 1.4, subject.line_height
       end
     end

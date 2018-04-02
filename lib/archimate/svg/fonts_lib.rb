@@ -11,14 +11,20 @@ module Archimate
 
       DEFAULT_FONT_FACE = 'Lucida Grande'
 
+      def font(font_face)
+        cache.fetch(font_face&.strip || DEFAULT_FONT_FACE) do |face|
+          cache[face] = Font.new(File.open(path_to(face), 'rb'))
+        end
+      end
+
       def path_to(font_face)
-        cache.fetch(font_face&.strip || DEFAULT_FONT_FACE) { |face| lookup(face || DEFAULT_FONT_FACE) }
+        path_cache.fetch(font_face&.strip || DEFAULT_FONT_FACE) { |face| lookup(face || DEFAULT_FONT_FACE) }
       end
 
       def lookup(font_face)
         fc_match = `fc-match "#{font_face}" file`
         file = fc_match.sub(/\A:file=/, "").strip
-        cache[font_face] = file
+        path_cache[font_face] = file
         file
       end
 
@@ -26,19 +32,9 @@ module Archimate
         @cache ||= {}
       end
 
-      # DEFAULT_FONTS_CONF = '/usr/local/etc/fonts/fonts.conf'
-
-      # def fonts_conf
-      #   @fonts_conf ||= Nokogiri::XML(File.read(DEFAULT_FONTS_CONF))
-      # end
-
-      # def cache_dir
-      #   @cache_dir ||= fonts_conf.at_css('cachedir').text
-      # end
-
-      # def font_cache
-      #   @fonts_cache ||= Nokogiri::XML(File.read(cache_dir))
-      # end
+      def path_cache
+        @path_cache ||= {}
+      end
     end
   end
 end
