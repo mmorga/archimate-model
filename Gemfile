@@ -2,5 +2,5 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in archimate.gemspec
+# Specify your gem's dependencies in archimate-model.gemspec
 gemspec

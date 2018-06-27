@@ -153,8 +153,8 @@ module Archimate
       end
 
       def build_model(options = {})
-        elements = build_element_list(options)
-        relationships = build_relationship_list(options.merge(elements: elements))
+        elements = options.fetch(:elements) { build_element_list(options) }
+        relationships = options.fetch(:relationships) { build_relationship_list(options.merge(elements: elements)) }
         diagrams = options.fetch(:diagrams) { build_diagram_list(options.merge(elements: elements, relationships: relationships)) }
         organizations = options.fetch(:organizations) { build_organization_list(options) }
         DataModel::Model.new(

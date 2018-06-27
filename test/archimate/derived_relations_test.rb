@@ -1,37 +1,40 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'test_examples'
-require "awesome_print"
 
 module Archimate
   class DerivedRelationsTest < Minitest::Test
     DerivedRelationCase = Struct.new(:type, :source, :target)
 
     def setup
-      @model = Archimate.read(
-        File.join(
-          TEST_EXAMPLES_FOLDER,
-          "derived-relations-cases.archimate"
-        )
-      )
-      @subject = DerivedRelations.new(@model)
-      @a = @model.elements.find(&DataModel.by_name("A"))
-      @b = @model.elements.find(&DataModel.by_name("B"))
-      @d = @model.elements.find(&DataModel.by_name("D"))
-      @d_api = @model.elements.find(&DataModel.by_name("D API"))
-      @d_func = @model.elements.find(&DataModel.by_name("D Function"))
-      @d_svc = @model.elements.find(&DataModel.by_name("D Service"))
-      @app_func = @model.elements.find(&DataModel.by_name("Application Function"))
+      @a = build_element(type: "ApplicationComponent", name: "A", id: "a")
+      @b = build_element(type: "ApplicationComponent", name: "B", id: "b")
+      @app_func = build_element(type: "ApplicationFunction", name: "Application Function", id: "app_func")
+      @c = build_element(type: "ApplicationComponent", name: "C", id: "c")
+      @d = build_element(type: "ApplicationComponent", name: "D", id: "d")
+      @d_api = build_element(type: "ApplicationInterface", name: "D API", id: "d_api")
+      @d_svc = build_element(type: "ApplicationService", name: "D Service", id: "d_svc")
+      @d_func = build_element(type: "ApplicationFunction", name: "D Function", id: "d_fun")
 
-      @d_to_d_api = @model.relationships.find { |rel| rel.source == @d && rel.target == @d_api }
-      @d_to_d_func = @model.relationships.find { |rel| rel.source == @d && rel.target == @d_func }
-      @d_api_to_d_svc = @model.relationships.find { |rel| rel.source == @d_api && rel.target == @d_svc }
-      @d_svc_to_app_func = @model.relationships.find { |rel| rel.source == @d_svc && rel.target == @app_func }
-      @d_func_to_d_svc = @model.relationships.find { |rel| rel.source == @d_func && rel.target == @d_svc }
-      @d_api_to_a = @model.relationships.find { |rel| rel.source == @d_api && rel.target == @a }
-      @a_to_b = @model.relationships.find { |rel| rel.source == @a && rel.target == @b }
-      @a_to_app_func = @model.relationships.find { |rel| rel.source == @a && rel.target == @app_func }
+      @a_to_b = build_relationship(type: "ServingRelationship", source: @a, target: @b)
+      @a_to_app_func = build_relationship(type: "AssignmentRelationship", source: @a, target: @app_func)
+      @d_to_d_api = build_relationship(type: "CompositionRelationship", source: @d, target: @d_api)
+      @d_api_to_d_svc = build_relationship(type: "AssignmentRelationship", source: @d_api, target: @d_svc)
+      @d_func_to_d_svc = build_relationship(type: "RealizationRelationship", source: @d_func, target: @d_svc)
+      @d_svc_to_app_func = build_relationship(type: "ServingRelationship", source: @d_svc, target: @app_func)
+      @c_to_app_func = build_relationship(type: "ServingRelationship", source: @c, target: @app_func)
+      @d_to_d_func = build_relationship(type: "AssignmentRelationship", source: @d, target: @d_func)
+      @d_api_to_a = build_relationship(type: "ServingRelationship", source: @d_api, target: @a)
+
+      @model = build_model(
+        elements: [@a, @b, @app_func, @c, @d, @d_api, @d_svc],
+        relationships: [
+          @a_to_b, @a_to_app_func, @d_to_d_api, @d_api_to_d_svc, @d_func_to_d_svc,
+          @d_svc_to_app_func, @c_to_app_func, @d_to_d_func, @d_api_to_a
+        ]
+      )
+
+      @subject = DerivedRelations.new(@model)
     end
 
     def test_element_by_name

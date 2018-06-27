@@ -2,8 +2,6 @@
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-TEST_EXAMPLES_FOLDER = File.join(File.dirname(__FILE__), "examples")
-
 # TODO: This is for MRI only
 if ENV['TEST_ENV'] != 'guard'
   require 'simplecov'
@@ -21,20 +19,13 @@ if ENV['TEST_ENV'] != 'guard'
   puts "required simplecov"
 end
 
-require 'pry-byebug' # TODO: MRI only
 require 'minitest/autorun'
 require 'minitest/color'
 require 'minitest/profile'
 require 'faker'
 require 'pp'
-require 'awesome_print'
 require 'archimate'
 require_relative 'examples/factories'
-
-config = Archimate::Config.instance
-config.interactive = false
-test_log_stringio = StringIO.new
-config.logger = Logger.new(test_log_stringio)
 
 Minitest::Test.make_my_diffs_pretty!
 

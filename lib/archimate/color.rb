@@ -1,40 +1,12 @@
 # frozen_string_literal: true
 
-require "highline"
-
-HighLine.color_scheme = HighLine::ColorScheme.new do |cs|
-  cs[:headline]                       = %i[underline bold yellow on_black]
-  cs[:horizontal_line]                = %i[bold white]
-  cs[:even_row]                       = [:green]
-  cs[:odd_row]                        = [:magenta]
-  cs[:error]                          = %i[bold red]
-  cs[:warning]                        = %i[bold yellow]
-  cs[:debug]                          = [:gray]
-  cs[:insert]                         = %i[bold green]
-  cs[:change]                         = %i[bold yellow]
-  cs[:move]                           = %i[bold yellow]
-  cs[:delete]                         = %i[bold red]
-  cs[:Business]                       = %i[black on_light_yellow]
-  cs[:Application]                    = %i[black on_light_blue]
-  cs[:Technology]                     = %i[black on_light_green]
-  cs[:Motivation]                     = %i[black on_light_magenta]
-  cs[:"Implementation and Migration"] = %i[black on_light_red]
-  cs[:Physical]                       = %i[black on_light_green]
-  cs[:Connectors]                     = %i[black on_light_gray]
-  cs[:unknown_layer]                  = %i[black on_gray]
-  cs[:Model]                          = [:cyan]
-  cs[:Connection]                     = [:blue]
-  cs[:Organization]                   = [:cyan]
-  cs[:Relationship]                   = %i[black on_light_gray]
-  cs[:Diagram]                        = %i[black on_cyan]
-  cs[:path]                           = [:light_blue]
-end
+# The color module is a hook to allow other archimate extensions to apply
+# coloring in an adaptable way. The defaults here do nothing.
 
 module Archimate
   class Color
     def self.layer_color(layer, str)
-      layer_sym = layer&.to_sym
-      sym = HighLine.color_scheme.include?(layer_sym) ? layer_sym : :unknown_layer
+      sym = layer&.to_sym
       color(str, sym)
     end
 
@@ -43,11 +15,11 @@ module Archimate
     end
 
     def self.color(str, args)
-      HighLine.color(str, args)
+      str
     end
 
     def self.uncolor(str)
-      HighLine.uncolor(str)
+      str
     end
   end
 end

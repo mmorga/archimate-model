@@ -11,13 +11,6 @@ Rake::TestTask.new(:test) do |t|
 end
 
 namespace :test do
-  desc "Run only integration tests."
-  Rake::TestTask.new(:integration) do |t|
-    t.libs << "test"
-    t.libs << "lib"
-    t.test_files = FileList['test/integration/**/*_test.rb']
-  end
-
   desc "Run tests and report slowest tests."
   Rake::TestTask.new(:profile) do |t|
     t.libs << "test"
